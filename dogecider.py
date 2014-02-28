@@ -53,10 +53,10 @@ def autocompleter(text, state):
 #I have no idea what this does:
 readline.parse_and_bind("tab: complete")
 
+#adds a new choice into master list of choices - used for autocompleter.
 def new_choice(entry):
     if entry not in choice:
         choice.append(entry)
-
 
 #set empty list of "choices" - this will just hold the master list of different options for the autocompleter
 choices = []
@@ -77,6 +77,8 @@ print "\n" + str(group_size) + " jokers can't make a decision to save their live
 # "Save decision making session"
 # "Re-open and edit decision making session"
 # Ideally we should have a live display of each user, the options they enter and the relative preference score for each.
+
+# player.add_choice(); player.remove_choice(); player.choice_lookup()
 
 print "\n"
 
