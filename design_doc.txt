@@ -1,0 +1,21 @@
+Design document
+
+1. Front end
+
+- Enter number of players to determine single/multiplayer mode.
+
+2. Data structure
+
+- Object orientated - "Player class" and methods
+
+3. File manipulation
+
+- ?SQL
+- ?Plaintext
+
+4. Randomisation
+
+- Web randomisation
+- Mobile gyroscope
+
+5. Web/Mobile
