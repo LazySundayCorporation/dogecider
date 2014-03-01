@@ -50,6 +50,16 @@ def autocompleter(text, state):
     else:
         return None
 
+#integer check and repeat entry
+def conv(num):
+    try:
+        int(num)
+    except ValueError:
+        group_size = raw_input("Enter a whole number: ")
+        conv(group_size)
+    else:
+        return True
+
 #I have no idea what this does:
 readline.parse_and_bind("tab: complete")
 
@@ -59,14 +69,41 @@ def new_choice(entry):
         choice.append(entry)
 
 #set empty list of "choices" - this will just hold the master list of different options for the autocompleter
-choices = []
+m_choices = []
 
-# Set empty group dictionary
-group = {}
+#define Player class and methods
+class Player(object):
+    
+    #individual choices and preferences
+    i_choices = {}
+    
+    def __init__(self, name):
+        self.name = name
+
+    def remove_choice(sug):
+        del self.i_choices[self, sug]
+
+    #can be used to edit choice also
+    def add_choice(self, sug, score):
+        self.i_choices[sug] = score
 
 # Set total group size and return to user
-group_size = int(raw_input("Enter the number of people trying to make a decision: "))
+group_size = raw_input("Enter the number of people trying to make a decision: ")
 print "\n" + str(group_size) + " jokers can't make a decision to save their lives"
+
+conv(group_size)
+
+while group_size < 1:
+    print "Gotta have at least one person being indecisive"
+    group_size = int(raw_input("Re-enter the number of people trying to make a decision: "))
+
+else:
+    if group_size == 1:
+        mode = 'single'
+    elif group_size >= 1:
+        mode = 'multi'
+
+print "OK. Now enter the list of 
 
 
 
