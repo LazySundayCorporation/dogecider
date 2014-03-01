@@ -53,12 +53,10 @@ def autocompleter(text, state):
 #integer check and repeat entry
 def conv(num):
     try:
-        int(num)
+        return int(num)
     except ValueError:
-        group_size = raw_input("Enter a whole number: ")
-        conv(group_size)
-    else:
-        return True
+        group_size = raw_input("Try again. Enter a whole number: ")
+        return conv(group_size)
 
 #I have no idea what this does:
 readline.parse_and_bind("tab: complete")
@@ -71,17 +69,21 @@ def new_choice(entry):
 #set empty list of "choices" - this will just hold the master list of different options for the autocompleter
 m_choices = []
 
+#master player dictionary - key is player name and value is player object
+players = {}
+
 #define Player class and methods
 class Player(object):
     
     #individual choices and preferences
     i_choices = {}
     
-    def __init__(self, name):
+    def __init__(self, name, n_choices):
         self.name = name
+        self.n_choices = n_choices
 
-    def remove_choice(sug):
-        del self.i_choices[self, sug]
+    def remove_choice(self, sug):
+        del self.i_choices[sug]
 
     #can be used to edit choice also
     def add_choice(self, sug, score):
@@ -91,19 +93,30 @@ class Player(object):
 group_size = raw_input("Enter the number of people trying to make a decision: ")
 print "\n" + str(group_size) + " jokers can't make a decision to save their lives"
 
-conv(group_size)
+#check if group_size is an int
+group_size = conv(group_size)
 
+#check if group_size >0 and set mode.
 while group_size < 1:
     print "Gotta have at least one person being indecisive"
     group_size = int(raw_input("Re-enter the number of people trying to make a decision: "))
 
 else:
     if group_size == 1:
-        mode = 'single'
-    elif group_size >= 1:
-        mode = 'multi'
+        mode = 's'
+        print 'single indecisive person'
+    elif group_size > 1:
+        mode = 'm'
+        print 'a group of indecisive people'
 
-print "OK. Now enter the list of 
+#main add-player add-choices block
+p_name = raw_input('Enter player name: ')
+p_nchoices = raw_input('Enter the number of choices: ')
+players[p_name] = Players(p_name, p_nchoices)
+print "OK, " + p_name + " , it's time to enter some choices"
+print "Enter a choice followed by a score - in this format: 'Apple, 9'. Scores must be 1-10".
+for i in range(p_nchoices):
+    players[p_name].add_choice(
 
 
 
