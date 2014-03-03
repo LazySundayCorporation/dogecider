@@ -8,7 +8,7 @@ Brought to you by the LazySundayCorporation: "Utility is secondary to validity."
 
 """
 
-import math, readline
+import math, readline, re
 
 # Welcome message
 
@@ -43,6 +43,15 @@ Start ----------------------------------->
 As long as the state < the size of list "options", it will return the next item in that list which begins with "text". I think.
 """
 
+#integer check and repeat entry
+def int_check(num):
+    try:
+        return int(num)
+    except ValueError:
+        num = raw_input("Try again. Enter a valid whole number: ")
+        return int_check(num)
+
+#console autocompleter
 def autocompleter(text, state):
     options = [i for i in choices if i.startswith(text)]
     if state < len(options):
@@ -50,23 +59,15 @@ def autocompleter(text, state):
     else:
         return None
 
-#integer check and repeat entry
-def conv(num):
-    try:
-        return int(num)
-    except ValueError:
-        group_size = raw_input("Try again. Enter a whole number: ")
-        return conv(group_size)
-
 #I have no idea what this does:
 readline.parse_and_bind("tab: complete")
 
 #adds a new choice into master list of choices - used for autocompleter.
 def new_choice(entry):
-    if entry not in choice:
-        choice.append(entry)
+    if entry not in m_choices:
+        m_choices.append(entry)
 
-#set empty list of "choices" - this will just hold the master list of different options for the autocompleter
+#set empty master list of "choices" - this will just hold the master list of different options for the autocompleter
 m_choices = []
 
 #master player dictionary - key is player name and value is player object
@@ -85,16 +86,31 @@ class Player(object):
     def remove_choice(self, sug):
         del self.i_choices[sug]
 
-    #can be used to edit choice also
-    def add_choice(self, sug, score):
-        self.i_choices[sug] = score
+    def add_choice(self):
+        entry = raw_input('Enter a new choice and score: ').lower()
+        while not self.c_parse(entry):
+            entry = raw_input('Incorrect format. Enter choice and score(1-9): ').lower()
+        else:
+            self.i_choices[self.c_parse(entry)[0]] = self.c_parse(entry)[1]
+            new_choice(self.c_parse(entry)[0])
+        
+        #while self.c_parse(entry)[1] <1 or self.c_parse(entry)[1] > 9:
+            #entry = raw_input('Incorrect format. Enter choice and score(1-9): ')
+        
+    #regex-parse any input string of format 'string, integer', return the two components. Individual components can be extracted as c_parse(entry)[0] and c_parse(entry)[1]. Tutorial: https://www.youtube.com/watch?v=kWyoYtvJpe4
+    def c_parse(self, entry):
+        parsed = re.search(r'(\S+)\s*,\s*(\d+)', entry)
+        if parsed:
+            return parsed.group(1), int(parsed.group(2))
+        else:
+            return False
 
 # Set total group size and return to user
 group_size = raw_input("Enter the number of people trying to make a decision: ")
-print "\n" + str(group_size) + " jokers can't make a decision to save their lives"
+print str(group_size) + " joker(s) can't make a decision to save their lives"
 
 #check if group_size is an int
-group_size = conv(group_size)
+group_size = int_check(group_size)
 
 #check if group_size >0 and set mode.
 while group_size < 1:
@@ -110,15 +126,23 @@ else:
         print 'a group of indecisive people'
 
 #main add-player add-choices block
-p_name = raw_input('Enter player name: ')
-p_nchoices = raw_input('Enter the number of choices: ')
-players[p_name] = Players(p_name, p_nchoices)
-print "OK, " + p_name + " , it's time to enter some choices"
-print "Enter a choice followed by a score - in this format: 'Apple, 9'. Scores must be 1-10".
-for i in range(p_nchoices):
-    players[p_name].add_choice(
 
+count = 1
+while count <= group_size:
+    p_name = raw_input('Enter player name: ')
+    p_nchoices = int_check(raw_input('Enter the number of choices: '))
+    players[p_name] = Player(p_name, p_nchoices)
+    print "OK " + p_name + " , it's time to enter some choices."
+    print "Enter a choice followed by a score - in this format: 'Apple, 9'. Scores must be 1-10."
+    for i in range(p_nchoices):
+        players[p_name].add_choice()
+    count += 1
 
+for i in players:
+    print i, players[i].i_choices
+
+print "\n"
+print "Master choice list: ", m_choices
 
 # Other things needed:
 # Figure out rest of autofill using tab autocompletion ("readline" module) / autocompleter function.
