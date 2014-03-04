@@ -8,7 +8,7 @@ Brought to you by the LazySundayCorporation: "Utility is secondary to validity."
 
 """
 
-import math, readline, re
+import math, readline, re, random
 
 # Welcome message
 
@@ -53,7 +53,7 @@ def int_check(num):
 
 #console autocompleter
 def autocompleter(text, state):
-    options = [i for i in choices if i.startswith(text)]
+    options = [i for i in m_choices if i.startswith(text)]
     if state < len(options):
         return options[state]
     else:
@@ -61,6 +61,7 @@ def autocompleter(text, state):
 
 #I have no idea what this does:
 readline.parse_and_bind("tab: complete")
+readline.set_completer(autocompleter)
 
 #adds a new choice into master list of choices - used for autocompleter.
 def new_choice(entry):
@@ -72,6 +73,9 @@ m_choices = []
 
 #master player dictionary - key is player name and value is player object
 players = {}
+
+#master list pre-random selection
+randomiser_array = []
 
 #define Player class and methods
 class Player(object):
@@ -103,6 +107,15 @@ class Player(object):
             return parsed.group(1), int(parsed.group(2))
         else:
             return False
+
+def populate(players):
+    for i in players:
+        for j in players[i].i_choices:
+            for k in range(players[i].i_choices[j]):
+                randomiser_array.append(j)
+
+def random_select(randomiser_array):
+    print randomiser_array[random.randint(1, len(randomiser_array))]
 
 # Set total group size and return to user
 group_size = raw_input("Enter the number of people trying to make a decision: ")
@@ -136,12 +149,22 @@ while count <= group_size:
     for i in range(p_nchoices):
         players[p_name].add_choice()
     count += 1
-
+print "\n"
 for i in players:
     print i, players[i].i_choices
-
 print "\n"
 print "Master choice list: ", m_choices
+print "\n"
+populate(players)
+print "Master randomiser_array", randomiser_array
+print "\n"
+print "Randomiser x 6"
+random_select(randomiser_array)
+random_select(randomiser_array)
+random_select(randomiser_array)
+random_select(randomiser_array)
+random_select(randomiser_array)
+random_select(randomiser_array)
 
 # Other things needed:
 # Figure out rest of autofill using tab autocompletion ("readline" module) / autocompleter function.
