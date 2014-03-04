@@ -76,12 +76,11 @@ players = {}
 #define Player class and methods
 class Player(object):
     
-    #individual choices and preferences
-    i_choices = {}
     
     def __init__(self, name, n_choices):
         self.name = name
         self.n_choices = n_choices
+        self.i_choices = {}
 
     def remove_choice(self, sug):
         del self.i_choices[sug]
